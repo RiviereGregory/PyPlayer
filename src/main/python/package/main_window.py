@@ -54,6 +54,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.act_pause.triggered.connect(self.player.pause)
         self.act_stop.triggered.connect(self.player.stop)
         self.act_previous.triggered.connect(partial(self.player.setPosition, 0))
+        self.player.stateChanged.connect(self.update_buttons)
 
     def open(self):
         file_dialog = QtWidgets.QFileDialog(self)
@@ -64,3 +65,8 @@ class MainWindow(QtWidgets.QMainWindow):
             movie = file_dialog.selectedUrls()[0]
             self.player.setMedia(movie)
             self.player.play()
+
+    def update_buttons(self, state):
+        self.act_play.setDisabled(state == QtMultimedia.QMediaPlayer.PlayingState)
+        self.act_pause.setDisabled(state == QtMultimedia.QMediaPlayer.PausedState)
+        self.act_stop.setDisabled(state == QtMultimedia.QMediaPlayer.StoppedState)
