@@ -1,4 +1,4 @@
-from PySide2 import QtWidgets, QtMultimedia, QtMultimediaWidgets
+from PySide2 import QtWidgets, QtMultimedia, QtMultimediaWidgets, QtCore
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -13,6 +13,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stop_icon = self.style().standardIcon(QtWidgets.QStyle.SP_MediaStop)
 
         self.setup_ui()
+        self.open()
 
     def setup_ui(self):
         self.create_widgets()
@@ -48,3 +49,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def setup_connections(self):
         pass
+
+    def open(self):
+        file_dialog = QtWidgets.QFileDialog(self)
+        file_dialog.setMimeTypeFilters(["video/mp4"])
+        movies_dir = QtCore.QStandardPaths.writableLocation(QtCore.QStandardPaths.MoviesLocation)
+        file_dialog.setDirectory(movies_dir)
+        if file_dialog.exec_() == QtWidgets.QDialog.Accepted:
+            movie = file_dialog.selectedUrls()[0]
+            self.player.setMedia(movie)
+            self.player.play()
