@@ -1,3 +1,5 @@
+from functools import partial
+
 from PySide2 import QtWidgets, QtMultimedia, QtMultimediaWidgets, QtCore
 
 
@@ -13,7 +15,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.stop_icon = self.style().standardIcon(QtWidgets.QStyle.SP_MediaStop)
 
         self.setup_ui()
-        self.open()
 
     def setup_ui(self):
         self.create_widgets()
@@ -48,7 +49,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.player.setVideoOutput(self.video_widget)
 
     def setup_connections(self):
-        pass
+        self.act_open.triggered.connect(self.open)
+        self.act_play.triggered.connect(self.player.play)
+        self.act_pause.triggered.connect(self.player.pause)
+        self.act_stop.triggered.connect(self.player.stop)
+        self.act_previous.triggered.connect(partial(self.player.setPosition, 0))
 
     def open(self):
         file_dialog = QtWidgets.QFileDialog(self)
